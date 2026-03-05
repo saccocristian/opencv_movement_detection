@@ -27,15 +27,6 @@ def main():
     cap = cv2.VideoCapture(0)
     first_frame = None
 
-    # Informazioni dimensioni cattura video
-    frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-
-    #Variabili controllo per salvataggio files
-    movimento_rilevato = False
-    salvataggio_video = False
-    prev_timestamp = 0
-
     print("Sistema pronto. Premi 'r' per resettare lo sfondo, 'q' per uscire.")
 
     for i in range (2):
@@ -82,35 +73,6 @@ def main():
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
             cv2.putText(frame, "Movimento Rilevato!", (x, y - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-
-        # Salvo la data e la converto in timestamp
-        my_datetime = datetime.now()
-        timestamp = my_datetime.timestamp()
-
-        # Creo ambiente per salvataggio video
-        if movimento_rilevato and not salvataggio_video:
-            salvataggio_video = True
-            prev_timestamp = timestamp
-            # Ottengo strighe di data e ora per le cartelle
-            my_date = str(my_datetime)[0:10].replace("-","_")
-            my_time = str(my_datetime)[11:19].replace(":","_")
-            print(my_date)
-            print(my_time)
-
-            # Creo cartella con il giorno, poi la creo con l'ora (se non esistono)
-            nested_directory = "recordings/" + my_date + "/" + my_time
-            mkdirectory(nested_directory)
-            out = cv2.VideoWriter(nested_directory + "/output.mp4",cv2.VideoWriter.fourcc(*'mp4v'),20,(frame_width,frame_height))
-
-        # Salvataggio video
-        if salvataggio_video:
-            out.write(frame)
-            # se finisce il tempo della registrazione, resetto variabili e interrompo salvataggio video
-            if fine_registrazione(prev_timestamp,timestamp):
-                out.release()
-                prev_timestamp = 0
-                salvataggio_video = False
-                continue
 
         # Visualizziamo i risultati
         cv2.imshow("Originale con Bounding Box", frame)
