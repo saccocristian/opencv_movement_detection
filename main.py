@@ -1,5 +1,3 @@
-from xxlimited_35 import Null
-
 import cv2
 import time
 import os
@@ -38,15 +36,17 @@ def main():
 
     print("Sistema pronto. Premi 'r' per resettare lo sfondo, 'q' per uscire.")
 
-    for i in range (2):
+    for i in range (10):
         print("Avvio in corso ...", i)
         time.sleep(1)
-
+    count = 0
     while True:
         ret, frame = cap.read()
         if not ret:
             break
 
+        count = count + 1
+        movimento_rilevato = False
         # --- PRE-PROCESSING ---
         # Lavoro in scala di grigi
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -67,7 +67,9 @@ def main():
         contours, _ = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         for contour in contours:
+
             movimento_rilevato = True
+
             # 1. Area del contorno trovato
             area = cv2.contourArea(contour)
 
@@ -82,6 +84,10 @@ def main():
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
             cv2.putText(frame, "Movimento Rilevato!", (x, y - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+        if count % 200 == 0 and not movimento_rilevato:
+            first_frame = gray
+
 
         # Salvo la data e la converto in timestamp
         my_datetime = datetime.now()
