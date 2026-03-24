@@ -23,7 +23,7 @@ def main():
 
         # 3. Inferenza: YOLO analizza il frame
         # stream=True rende l'elaborazione più fluida per i video
-        results = model(frame, stream=True)
+        results = model(frame, stream=True, conf = 0.7, classes = [0])
 
         # 4. Visualizzazione: Disegniamo i risultati sul frame
         for r in results:
