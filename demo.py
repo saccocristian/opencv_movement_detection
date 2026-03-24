@@ -1,26 +1,5 @@
-from xxlimited_35 import Null
-
 import cv2
 import time
-import os
-from datetime import datetime
-
-def mkdirectory(path):
-    try:
-        os.makedirs(path)
-        print(f"Nested directories '{path}' created successfully.")
-    except FileExistsError:
-        print(f"One or more directories in '{path}' already exist.")
-    except PermissionError:
-        print(f"Permission denied: Unable to create '{path}'.")
-    except Exception as e:
-        print(f"An error occurred: {e}")
-
-def fine_registrazione(prev_timestamp, now_timestamp):
-    # TRUE: se timestamp attuale - timestamp salvato maggiore del tempo fissato, esco dal ciclo
-    # FALSE: Altrimenti
-    recording_minutes = 1
-    return now_timestamp - prev_timestamp > recording_minutes * 60
 
 def main():
     # apertura camera
@@ -29,9 +8,9 @@ def main():
 
     print("Sistema pronto. Premi 'r' per resettare lo sfondo, 'q' per uscire.")
 
-    for i in range (2):
+    for i in range (5):
         print("Avvio in corso ...", i)
-        time.sleep(1)
+        time.sleep(0.5)
 
     while True:
         ret, frame = cap.read()
