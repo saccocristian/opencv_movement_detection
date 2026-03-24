@@ -36,9 +36,9 @@ def main():
 
     print("Sistema pronto. Premi 'r' per resettare lo sfondo, 'q' per uscire.")
 
-    for i in range (10):
+    for i in range (5):
         print("Avvio in corso ...", i)
-        time.sleep(1)
+        time.sleep(0.5)
     count = 0
     while True:
         ret, frame = cap.read()
@@ -47,8 +47,9 @@ def main():
 
         count = count + 1
         movimento_rilevato = False
+
         # --- PRE-PROCESSING ---
-        # Lavoro in scala di grigi
+        # Lavoro in scala di grigi per semplicita'
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         gray = cv2.GaussianBlur(gray, (21, 21), 0)
 
@@ -63,7 +64,7 @@ def main():
         thresh = cv2.dilate(thresh, None, iterations=4)
 
         # Trovo tutti i contorni sulla differenza dei pixel;
-        # non e' piu' necessario copiare l'oggetto, ma e' buona abitudine farlo
+        # non e' piu' necessario copiare l'oggetto, ma e' buona abitudine farlo con xxxxx.copy()
         contours, _ = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         for contour in contours:
@@ -87,7 +88,6 @@ def main():
 
         if count % 200 == 0 and not movimento_rilevato:
             first_frame = gray
-
 
         # Salvo la data e la converto in timestamp
         my_datetime = datetime.now()
@@ -117,7 +117,6 @@ def main():
                 prev_timestamp = 0
                 salvataggio_video = False
                 continue
-
         # Visualizziamo i risultati
         cv2.imshow("Originale con Bounding Box", frame)
         # cv2.imshow("Thresh", thresh)
